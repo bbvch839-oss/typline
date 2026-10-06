@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="dark light">
+  <meta name="description" content="BBVCH type — an offline, distraction-free typing test.">
+  <title>BBVCH type — Typing Test</title>
+  <link rel="icon" type="image/svg+xml" href="assets/icons/favicon.svg">
+  <script>
+    /* Apply the saved theme before first paint (prevents a flash of the default theme). */
+    try {
+      var s = JSON.parse(localStorage.getItem('tapline.v1.settings') || '{}');
+      if (s && typeof s.theme === 'string') document.documentElement.setAttribute('data-theme', s.theme);
+    } catch (e) { /* ignore */ }
+  </script>
+  <link rel="stylesheet" href="css/themes.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/analysis.css">
+  <link rel="stylesheet" href="css/guide.css">
+  <link rel="stylesheet" href="css/progress.css">
+  <link rel="stylesheet" href="css/motion.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- ============ TOP BAR ============ -->
+  <header class="topbar" id="topbar">
+    <a class="brand" href="#test" aria-label="BBVCH type home">
+      <svg class="brand__mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="3" y="7" width="26" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M9 19h14" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+        <circle cx="10" cy="13" r="1.6" fill="currentColor"/><circle cx="16" cy="13" r="1.6" fill="currentColor"/><circle cx="22" cy="13" r="1.6" fill="currentColor"/>
+      </svg>
+      <span class="brand__name">BBVCH <span class="brand__accent">type</span></span>
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <a class="nav__link" href="#test" data-route="test" title="Test">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2.5" y="6" width="19" height="12" rx="2.5"/><path d="M6.5 10h1M10.5 10h1M14.5 10h1M8 14h8"/></svg>
+        <span>Test</span>
+      </a>
+      <a class="nav__link" href="#results" data-route="results" title="Results">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+        <span>Results</span>
+      </a>
+      <a class="nav__link" href="#dashboard" data-route="dashboard" title="Dashboard (Ctrl+D)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="5" rx="1.5"/><rect x="13" y="10" width="8" height="11" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/></svg>
+        <span>Dashboard</span>
+      </a>
+      <a class="nav__link" href="#settings" data-route="settings" title="Settings (Ctrl+,)">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M12 2.5v3M12 18.5v3M2.5 12h3M18.5 12h3M5.3 5.3l2.1 2.1M16.6 16.6l2.1 2.1M5.3 18.7l2.1-2.1M16.6 7.4l2.1-2.1"/></svg>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <button class="icon-btn theme-toggle lang-toggle" id="langToggle" type="button" aria-label="Interface language" title="Interface language">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.7 3.7 5.7 3.7 9s-1.2 6.3-3.7 9c-2.5-2.7-3.7-5.7-3.7-9S9.5 5.7 12 3z"/></svg>
+      <span class="theme-toggle__label" id="langToggleLabel" data-no-i18n>EN</span>
+    </button>
+
+    <button class="icon-btn theme-toggle" id="themeToggle" type="button" aria-label="Switch theme" title="Switch theme">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9 7 7 0 0 1-9-9z"/></svg>
+      <span class="theme-toggle__label" id="themeToggleLabel">dark</span>
+    </button>
+  </header>
+
+  <main id="main" class="main" tabindex="-1">
+
+    <!-- ============ TEST PAGE ============ -->
+    <section class="page page--test" id="page-test" data-page="test" aria-labelledby="testHeading">
+      <h1 class="visually-hidden" id="testHeading">Typing test</h1>
+
+      <div class="config" id="testConfig" role="toolbar" aria-label="Test configuration">
+        <div class="config__group" role="group" aria-label="Extras">
+          <button type="button" class="chip" data-toggle="punctuation" aria-pressed="false"><span class="chip__glyph">!?</span>punctuation</button>
+          <button type="button" class="chip" data-toggle="numbers" aria-pressed="false"><span class="chip__glyph">42</span>numbers</button>
+        </div>
+        <span class="config__divider" aria-hidden="true"></span>
+        <div class="config__group" role="group" aria-label="Mode">
+          <button type="button" class="chip" data-mode="time" aria-pressed="false">time</button>
+          <button type="button" class="chip" data-mode="words" aria-pressed="false">words</button>
+          <button type="button" class="chip" data-mode="quote" aria-pressed="false">quote</button>
+          <button type="button" class="chip" data-mode="custom" aria-pressed="false">custom</button>
+          <button type="button" class="chip" data-mode="practice" aria-pressed="false" title="Smart practice: words built from your weak keys"><span class="chip__glyph">&#9733;</span>practice</button>
+        </div>
+        <span class="config__divider" aria-hidden="true"></span>
+        <div class="config__group" role="group" aria-label="Length" id="configValues"></div>
+        <span class="config__divider" aria-hidden="true"></span>
+        <div class="config__group" role="group" aria-label="Typing language" id="configLang"></div>
+      </div>
+
+      <div class="exam-banner" id="examBanner" hidden></div>
+
+      <div class="hud" id="hud" aria-live="off">
+        <div class="hud__main">
+          <div class="hud__stat hud__stat--timer"><span class="hud__value" id="hudTimer">60</span><span class="hud__label" id="hudTimerLabel">seconds</span></div>
+          <div class="hud__stat" id="hudWpmWrap"><span class="hud__value" id="hudWpm">0</span><span class="hud__label">wpm</span></div>
+          <div class="hud__stat" id="hudAccWrap"><span class="hud__value" id="hudAcc">100</span><span class="hud__label">% acc</span></div>
+        </div>
+        <dl class="hud__details" id="hudDetails">
+          <div><dt>word</dt><dd id="hudWord" data-no-i18n>—</dd></div>
+          <div><dt>next key</dt><dd id="hudChar" data-no-i18n>—</dd></div>
+          <div><dt>typed</dt><dd id="hudTyped">0</dd></div>
+          <div><dt>correct</dt><dd id="hudCorrect" class="is-good">0</dd></div>
+          <div><dt>incorrect</dt><dd id="hudIncorrect" class="is-bad">0</dd></div>
+        </dl>
+      </div>
+
+      <div class="typing" id="typingArea">
+        <input class="typing__input" id="typingInput" type="text" value=" "
+               autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false"
+               aria-label="Type the words shown. Tab starts a new test, Escape resets." data-lpignore="true">
+        <div class="typing__viewport" id="wordsViewport" aria-hidden="true">
+          <div class="typing__track" id="wordsTrack">
+            <div class="words" id="words"></div>
+            <div class="caret caret--line" id="caret"></div>
+          </div>
+        </div>
+        <button type="button" class="typing__overlay" id="focusOverlay" hidden>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3l9 9-4 1 3 6-2 1-3-6-3 3z"/></svg>
+          Click here or press any key to focus
+        </button>
+        <p class="typing__notice" id="typingNotice" role="status" aria-live="polite"></p>
+      </div>
+
+      <p class="quote-source" id="quoteSource" hidden></p>
+      <p class="practice-focus" id="practiceFocus" hidden></p>
+      <p class="layout-hint" id="layoutHint" hidden></p>
+      <p class="ghost-info" id="ghostInfo" hidden></p>
+
+      <div class="test-actions">
+        <button type="button" class="icon-btn icon-btn--lg" id="btnRestart" aria-label="New test (Tab)" title="New test (Tab)">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>
+        </button>
+      </div>
+
+      <div class="kbd" id="keyboardViz" hidden aria-hidden="true"></div>
+
+      <footer class="hints" id="hints">
+        <span><kbd>tab</kbd> new test</span>
+        <span><kbd>esc</kbd> reset</span>
+        <span><kbd>ctrl</kbd>+<kbd>enter</kbd> custom</span>
+        <span><kbd>ctrl</kbd>+<kbd>d</kbd> dashboard</span>
+        <span><kbd>ctrl</kbd>+<kbd>,</kbd> settings</span>
+      </footer>
+    </section>
+
+    <!-- ============ RESULTS PAGE ============ -->
+    <section class="page page--results" id="page-results" data-page="results" aria-labelledby="resultsHeading" hidden>
+      <h1 class="visually-hidden" id="resultsHeading">Results</h1>
+      <div class="empty" id="resultsEmpty">
+        <p>No result yet. Finish a test and it will show up here.</p>
+        <a class="btn btn--primary" href="#test">Start typing</a>
+      </div>
+
+      <div class="results" id="resultsView" hidden>
+        <div class="results__head">
+          <div class="results__meta" id="resultMeta"></div>
+          <div class="results__badges" id="resultBadges"></div>
+        </div>
+
+        <div class="results__top">
+          <div class="big-stat">
+            <span class="big-stat__label">wpm</span>
+            <span class="big-stat__value" id="resWpm">0</span>
+          </div>
+          <div class="big-stat">
+            <span class="big-stat__label">accuracy</span>
+            <span class="big-stat__value" id="resAcc">0%</span>
+          </div>
+          <div class="results__chart">
+            <div class="chart" id="resultChart" role="img" aria-label="WPM and accuracy over time"></div>
+            <div class="chart-legend" id="resultChartLegend"></div>
+          </div>
+        </div>
+
+        <dl class="stat-row" id="resultStats"></dl>
+
+        <div class="results__actions">
+          <button type="button" class="btn" id="btnResRestart" title="Repeat the same text (Esc)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5"/></svg>Restart
+          </button>
+          <button type="button" class="btn btn--primary" id="btnResNew" title="New test (Tab)">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>New test
+          </button>
+          <button type="button" class="btn" id="btnResDetails" aria-expanded="false" aria-controls="resultDetails">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h10"/></svg>View details
+          </button>
+          <button type="button" class="btn" id="btnResCert">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="13" rx="2"/><circle cx="16" cy="14" r="3"/><path d="M14.5 16.5 14 21l2-1 2 1-.5-4.5M7 8h10M7 11h6"/></svg>Get certified
+          </button>
+          <button type="button" class="btn" id="btnResPractice" title="Practice the keys you miss most">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r="1" /></svg>Practice weak spots
+          </button>
+        </div>
+
+        <div class="panel progress-panel">
+          <div class="progress-box" id="progressResult"></div>
+        </div>
+
+        <div class="analysis" id="resultAnalysis">
+          <div class="panel panel--wide">
+            <h2 class="panel__title">Keyboard heatmap</h2>
+            <div id="anaHeatmap"></div>
+          </div>
+          <div class="panel">
+            <h2 class="panel__title">Fingers</h2>
+            <div id="anaFingers"></div>
+          </div>
+          <div class="panel">
+            <h2 class="panel__title">Fatigue</h2>
+            <p class="analysis__verdict" id="anaFatigueText"></p>
+            <div class="chart chart--sm" id="anaFatigueChart" role="img" aria-label="Speed trend over the test"></div>
+          </div>
+          <div class="panel panel--wide tree-panel">
+            <h2 class="panel__title">Your tree</h2>
+            <div class="tree-box" id="treeResult"></div>
+          </div>
+        </div>
+
+        <div class="results__details" id="resultDetails" hidden>
+          <div class="panel">
+            <h2 class="panel__title">Character breakdown</h2>
+            <div class="char-bar" id="charBar"></div>
+            <div class="char-legend" id="charLegend"></div>
+          </div>
+          <div class="panel">
+            <h2 class="panel__title">Most missed keys</h2>
+            <ol class="rank-list" id="missedKeys"></ol>
+          </div>
+          <div class="panel">
+            <h2 class="panel__title">Most missed words</h2>
+            <ol class="rank-list" id="missedWords"></ol>
+          </div>
+          <div class="panel panel--wide">
+            <h2 class="panel__title">Per-second breakdown</h2>
+            <div class="chart chart--sm" id="errorChart" role="img" aria-label="Errors per second"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ DASHBOARD PAGE ============ -->
+    <section class="page page--dashboard" id="page-dashboard" data-page="dashboard" aria-labelledby="dashHeading" hidden>
+      <div class="page-head">
+        <h1 class="page-head__title" id="dashHeading">Dashboard</h1>
+        <div class="tabs" role="tablist" aria-label="Dashboard sections">
+          <button type="button" role="tab" class="tab" id="tab-overview" aria-controls="panel-overview" aria-selected="true" data-tab="overview">Overview</button>
+          <button type="button" role="tab" class="tab" id="tab-rank" aria-controls="panel-rank" aria-selected="false" tabindex="-1" data-tab="rank">Rank &amp; level</button>
+          <button type="button" role="tab" class="tab" id="tab-history" aria-controls="panel-history" aria-selected="false" tabindex="-1" data-tab="history">History</button>
+          <button type="button" role="tab" class="tab" id="tab-analysis" aria-controls="panel-analysis" aria-selected="false" tabindex="-1" data-tab="analysis">Analysis</button>
+          <button type="button" role="tab" class="tab" id="tab-certificates" aria-controls="panel-certificates" aria-selected="false" tabindex="-1" data-tab="certificates">Certificates</button>
+          <button type="button" role="tab" class="tab" id="tab-achievements" aria-controls="panel-achievements" aria-selected="false" tabindex="-1" data-tab="achievements">Achievements</button>
+        </div>
+      </div>
+
+      <!-- Overview -->
+      <div class="tabpanel" role="tabpanel" id="panel-overview" aria-labelledby="tab-overview">
+        <div class="panel tree-panel">
+          <h2 class="panel__title">Your tree</h2>
+          <div class="tree-box tree-box--big" id="treeDash"></div>
+        </div>
+        <div class="dash-grid">
+          <div class="panel panel--streak">
+            <h2 class="panel__title">Streak</h2>
+            <div class="streak">
+              <div><span class="streak__value" id="streakCurrent">0</span><span class="streak__label">current (days)</span></div>
+              <div><span class="streak__value" id="streakLongest">0</span><span class="streak__label">longest (days)</span></div>
+              <div><span class="streak__value" id="activeDays">0</span><span class="streak__label">active days</span></div>
+            </div>
+          </div>
+
+          <div class="panel panel--goals">
+            <div class="panel__row">
+              <h2 class="panel__title">Goals</h2>
+              <button type="button" class="btn btn--sm" id="btnEditGoals">Edit</button>
+            </div>
+            <div class="goals" id="goals"></div>
+          </div>
+        </div>
+
+        <div class="panel">
+          <h2 class="panel__title">Activity</h2>
+          <div class="heatmap" id="heatmap"></div>
+        </div>
+
+        <div class="dash-grid dash-grid--3">
+          <div class="panel"><h2 class="panel__title">Personal bests</h2><dl class="kv" id="dashBests"></dl></div>
+          <div class="panel"><h2 class="panel__title">Averages <small id="avgScope">(all / last 10)</small></h2><dl class="kv" id="dashAverages"></dl></div>
+          <div class="panel"><h2 class="panel__title">Totals</h2><dl class="kv" id="dashTotals"></dl></div>
+        </div>
+
+        <div class="panel">
+          <h2 class="panel__title">Personal bests by mode</h2>
+          <div class="pb-grid" id="pbGrid"></div>
+        </div>
+
+        <div class="dash-grid">
+          <div class="panel"><h2 class="panel__title">WPM history</h2><div class="chart" id="chartWpm" role="img" aria-label="WPM history"></div></div>
+          <div class="panel"><h2 class="panel__title">Accuracy history</h2><div class="chart" id="chartAcc" role="img" aria-label="Accuracy history"></div></div>
+          <div class="panel"><h2 class="panel__title">Tests per day <small>(last 30 days)</small></h2><div class="chart" id="chartDaily" role="img" aria-label="Tests per day"></div></div>
+          <div class="panel"><h2 class="panel__title">Weekly progress <small>(avg wpm, last 12 weeks)</small></h2><div class="chart" id="chartWeekly" role="img" aria-label="Weekly progress"></div></div>
+        </div>
+      </div>
+
+      <!-- Rank & level -->
+      <div class="tabpanel" role="tabpanel" id="panel-rank" aria-labelledby="tab-rank" hidden>
+        <div id="rankDash"></div>
+      </div>
+
+      <!-- History -->
+      <div class="tabpanel" role="tabpanel" id="panel-history" aria-labelledby="tab-history" hidden>
+        <div class="toolbar">
+          <label class="field field--inline">
+            <span>Mode</span>
+            <select id="historyFilterMode">
+              <option value="all">All modes</option>
+              <option value="time">Time</option>
+              <option value="words">Words</option>
+              <option value="quote">Quote</option>
+              <option value="custom">Custom</option>
+              <option value="practice">Practice</option>
+            </select>
+          </label>
+          <label class="field field--inline">
+            <span>Period</span>
+            <select id="historyFilterPeriod">
+              <option value="all">All time</option>
+              <option value="1">Today</option>
+              <option value="7">Last 7 days</option>
+              <option value="30">Last 30 days</option>
+            </select>
+          </label>
+          <label class="field field--inline">
+            <span>Min wpm</span>
+            <input type="number" id="historyFilterMinWpm" min="0" max="400" step="5" value="0" inputmode="numeric">
+          </label>
+          <span class="toolbar__spacer"></span>
+          <span class="muted" id="historyCount"></span>
+          <button type="button" class="btn btn--danger btn--sm" id="btnClearHistory">Clear history</button>
+        </div>
+        <div class="table-wrap">
+          <table class="table" id="historyTable">
+            <thead>
+              <tr>
+                <th scope="col"><button type="button" class="sort" data-sort="date">Date</button></th>
+                <th scope="col"><button type="button" class="sort" data-sort="mode">Mode</button></th>
+                <th scope="col"><button type="button" class="sort" data-sort="time">Duration</button></th>
+                <th scope="col"><button type="button" class="sort" data-sort="wpm">WPM</button></th>
+                <th scope="col"><button type="button" class="sort" data-sort="acc">Accuracy</button></th>
+                <th scope="col"><button type="button" class="sort" data-sort="consistency">Consistency</button></th>
+                <th scope="col"><button type="button" class="sort" data-sort="raw">Raw</button></th>
+                <th scope="col"><span class="visually-hidden">Actions</span></th>
+              </tr>
+            </thead>
+            <tbody id="historyBody"></tbody>
+          </table>
+        </div>
+        <p class="empty empty--inline" id="historyEmpty" hidden>No tests match these filters.</p>
+        <div class="center"><button type="button" class="btn btn--sm" id="btnHistoryMore" hidden>Show more</button></div>
+      </div>
+
+      <!-- Analysis -->
+      <div class="tabpanel" role="tabpanel" id="panel-analysis" aria-labelledby="tab-analysis" hidden>
+        <div id="analysisDash"></div>
+      </div>
+
+      <!-- Certificates -->
+      <div class="tabpanel" role="tabpanel" id="panel-certificates" aria-labelledby="tab-certificates" hidden>
+        <div id="certDash"></div>
+      </div>
+
+      <!-- Achievements -->
+      <div class="tabpanel" role="tabpanel" id="panel-achievements" aria-labelledby="tab-achievements" hidden>
+        <p class="muted" id="achievementSummary"></p>
+        <ul class="ach-grid" id="achievementGrid"></ul>
+      </div>
+    </section>
+
+    <!-- ============ SETTINGS PAGE ============ -->
+    <section class="page page--settings" id="page-settings" data-page="settings" aria-labelledby="settingsHeading" hidden>
+      <div class="page-head">
+        <h1 class="page-head__title" id="settingsHeading">Settings</h1>
+      </div>
+      <div class="settings" id="settingsList"></div>
+
+      <div class="settings-group">
+        <h2 class="settings-group__title">Data</h2>
+        <div class="setting">
+          <div class="setting__text">
+            <h3 class="setting__name">Export / import</h3>
+            <p class="setting__desc">Download everything (history, settings, achievements, goals) as a JSON file, or restore from one.</p>
+          </div>
+          <div class="setting__control">
+            <button type="button" class="btn" id="btnExport">Export data</button>
+            <button type="button" class="btn" id="btnImport">Import data</button>
+            <input type="file" id="importFile" accept="application/json,.json" hidden>
+          </div>
+        </div>
+        <div class="setting">
+          <div class="setting__text">
+            <h3 class="setting__name">Reset all data</h3>
+            <p class="setting__desc">Deletes history, personal bests, achievements, goals and settings from this browser.</p>
+          </div>
+          <div class="setting__control">
+            <button type="button" class="btn btn--danger" id="btnResetAll">Reset all data</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ============ MODALS ============ -->
+  <div class="modal" id="confirmModal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmText">
+      <h2 class="modal__title" id="confirmTitle">Are you sure?</h2>
+      <p class="modal__text" id="confirmText"></p>
+      <div class="modal__actions">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button type="button" class="btn btn--danger" id="confirmOk">Confirm</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal" id="customModal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <form class="modal__dialog modal__dialog--wide" role="dialog" aria-modal="true" aria-labelledby="customTitle" id="customForm">
+      <h2 class="modal__title" id="customTitle">Custom test</h2>
+      <div class="form-grid">
+        <fieldset class="field">
+          <legend>Limit by</legend>
+          <div class="seg" role="radiogroup">
+            <label><input type="radio" name="customType" value="time"><span>Time</span></label>
+            <label><input type="radio" name="customType" value="words"><span>Words</span></label>
+          </div>
+        </fieldset>
+        <label class="field"><span>Time (seconds)</span><input type="number" name="customTime" min="5" max="3600" step="1" inputmode="numeric"></label>
+        <label class="field"><span>Words</span><input type="number" name="customWords" min="1" max="1000" step="1" inputmode="numeric"></label>
+        <label class="field"><span>Language</span><select name="language" id="customLanguage"></select></label>
+        <label class="field">
+          <span>Word list</span>
+          <select name="wordList">
+            <option value="common">Common</option>
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="advanced">Advanced</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>Difficulty</span>
+          <select name="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </label>
+        <fieldset class="field">
+          <legend>Punctuation</legend>
+          <div class="seg">
+            <label><input type="radio" name="punctuation" value="on"><span>On</span></label>
+            <label><input type="radio" name="punctuation" value="off"><span>Off</span></label>
+          </div>
+        </fieldset>
+        <fieldset class="field">
+          <legend>Numbers</legend>
+          <div class="seg">
+            <label><input type="radio" name="numbers" value="on"><span>On</span></label>
+            <label><input type="radio" name="numbers" value="off"><span>Off</span></label>
+          </div>
+        </fieldset>
+        <label class="field field--full">
+          <span>Custom text <small>(optional — overrides the word list)</small></span>
+          <textarea name="customText" rows="3" placeholder="Paste or type your own text here…"></textarea>
+        </label>
+      </div>
+      <p class="muted small">Difficulty — Easy: mistakes allowed. Medium: submitting a word with a mistake ends the test. Hard: any wrong key ends the test.</p>
+      <div class="modal__actions">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button type="submit" class="btn btn--primary">Start test</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="goalsModal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <form class="modal__dialog" role="dialog" aria-modal="true" aria-labelledby="goalsTitle" id="goalsForm">
+      <h2 class="modal__title" id="goalsTitle">Personal goals</h2>
+      <div class="form-grid form-grid--2">
+        <label class="field"><span>Target WPM</span><input type="number" name="wpm" min="1" max="400" step="1" required inputmode="numeric"></label>
+        <label class="field"><span>Target accuracy (%)</span><input type="number" name="acc" min="1" max="100" step="0.5" required inputmode="decimal"></label>
+      </div>
+      <p class="muted small">Progress is measured against the average of your last 10 tests.</p>
+      <div class="modal__actions">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button type="submit" class="btn btn--primary">Save goals</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="modal" id="examModal" hidden>
+    <div class="modal__backdrop"></div>
+    <div class="modal__dialog exam-dialog" role="dialog" aria-modal="true" aria-label="Certification exam" id="examModalBody"></div>
+  </div>
+
+  <div class="modal" id="certModal" hidden>
+    <div class="modal__backdrop" data-close></div>
+    <div class="modal__dialog modal__dialog--wide cert-dialog" role="dialog" aria-modal="true" aria-labelledby="certTitle">
+      <h2 class="modal__title" id="certTitle">Certificate</h2>
+      <label class="field"><span>Your name</span><input type="text" id="certName" maxlength="40" autocomplete="name" placeholder="Your name"></label>
+      <div class="cert-preview"><canvas id="certCanvas" width="1600" height="1130" aria-label="Certificate preview"></canvas></div>
+      <div class="modal__actions">
+        <button type="button" class="btn" data-close>Close</button>
+        <button type="button" class="btn btn--primary" id="certDownload">Download PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toasts" id="toastRoot" aria-live="polite" aria-atomic="false"></div>
+
+  <!-- ============ SCRIPTS (all local, load order matters) ============ -->
+  <script src="data/words.js"></script>
+  <script src="data/quotes.js"></script>
+  <script src="data/words-uz.js"></script>
+  <script src="data/words-ru.js"></script>
+  <script src="data/quotes-intl.js"></script>
+  <script src="data/i18n.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/settings.js"></script>
+  <script src="js/i18n.js"></script>
+  <script src="js/sound.js"></script>
+  <script src="js/effects.js"></script>
+  <script src="js/charts.js"></script>
+  <script src="js/statistics.js"></script>
+  <script src="js/timer.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/keyboard.js"></script>
+  <script src="js/words.js"></script>
+  <script src="js/analysis.js"></script>
+  <script src="js/typing.js"></script>
+  <script src="js/ghost.js"></script>
+  <script src="js/achievements.js"></script>
+  <script src="js/history.js"></script>
+  <script src="js/results.js"></script>
+  <script src="js/certificate.js"></script>
+  <script src="js/exam.js"></script>
+  <script src="js/tree.js"></script>
+  <script src="js/progress.js"></script>
+  <script src="js/motion.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

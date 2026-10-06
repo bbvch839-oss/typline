@@ -1,0 +1,92 @@
+/* =========================================================
+   MOTION — macOS-like smooth animations for the whole app
+   (js/motion.js). Springy easings, blur-fades, sliding pills,
+   staggered reveals, ripples and a soft spotlight on panels.
+   All motion is disabled by Settings → Animations = Off.
+   ========================================================= */
+
+:root {
+  --spring: cubic-bezier(.32, .72, 0, 1);          /* macOS sheet / window easing */
+  --bounce: cubic-bezier(.34, 1.56, .64, 1);       /* gentle overshoot */
+}
+
+/* ---------- sliding glider pill (nav + dashboard tabs) ---------- */
+.has-glider { position: relative; isolation: isolate; }
+.glider {
+  position: absolute; left: 0; top: 0; z-index: -1;
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, .12), inset 0 0 0 1px color-mix(in srgb, var(--text) 6%, transparent);
+  transition: transform .5s var(--spring), width .5s var(--spring), height .5s var(--spring), opacity .2s;
+  pointer-events: none;
+}
+.tabs.has-glider .glider { background: var(--surface-2); }
+.nav.has-glider .nav__link[aria-current="page"],
+.tabs.has-glider .tab[aria-selected="true"] { background: transparent; }
+.nav__link, .tab { position: relative; transition: color .3s var(--spring); }
+.btn, .chip, .option { position: relative; }
+
+/* ---------- pages: blur + scale fade like a macOS window ---------- */
+html[data-animations="on"] .page { animation: mac-page-in .6s var(--spring); }
+html[data-animations="on"] .tabpanel:not([hidden]) { animation: mac-page-in .5s var(--spring); }
+/* ---------- staggered reveal ---------- */
+html[data-animations="on"] .reveal { animation: mac-rise .7s var(--spring) both; animation-delay: calc(var(--d, 0) * 40ms); }
+/* ---------- buttons ---------- */
+html[data-animations="on"] .btn,
+html[data-animations="on"] .chip,
+html[data-animations="on"] .option,
+html[data-animations="on"] .icon-btn,
+html[data-animations="on"] .tab { transition: transform .35s var(--bounce), background-color .25s, color .25s, box-shadow .35s var(--spring), border-color .25s; }
+html[data-animations="on"] .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 20px -10px rgba(0, 0, 0, .45); }
+html[data-animations="on"] .btn:active:not(:disabled),
+html[data-animations="on"] .chip:active,
+html[data-animations="on"] .option:active,
+html[data-animations="on"] .icon-btn:active { transform: scale(.94); transition-duration: .12s; }
+html[data-animations="on"] .btn,
+html[data-animations="on"] .chip,
+html[data-animations="on"] .option,
+html[data-animations="on"] .tab { overflow: hidden; }
+html[data-animations="on"] .ripple {
+    position: absolute; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(circle, color-mix(in srgb, currentColor 30%, transparent) 0%, transparent 60%);
+    transform: scale(0); opacity: .9; animation: ripple .65s var(--spring) forwards;
+  }
+/* ---------- panels: lift + spotlight following the mouse ---------- */
+html[data-animations="on"] .panel { position: relative; transition: transform .5s var(--spring), box-shadow .5s var(--spring); }
+html[data-animations="on"] .panel::before {
+    content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), color-mix(in srgb, var(--accent) 9%, transparent), transparent 60%);
+    transition: opacity .4s var(--spring);
+  }
+html[data-animations="on"] .panel:hover::before { opacity: 1; }
+html[data-animations="on"] .panel:hover { box-shadow: 0 14px 34px -22px rgba(0, 0, 0, .6); }
+/* ---------- modals: blurred backdrop + spring sheet ---------- */
+html[data-animations="on"] .modal__backdrop { backdrop-filter: blur(10px) saturate(1.3); -webkit-backdrop-filter: blur(10px) saturate(1.3); animation: mac-fade .4s var(--spring); }
+html[data-animations="on"] .modal__dialog { animation: mac-pop .55s var(--spring); }
+/* ---------- toasts: spring slide ---------- */
+html[data-animations="on"] .toast { animation: mac-toast .6s var(--bounce); }
+html[data-animations="on"] .toast.is-leaving { transition: transform .45s var(--spring), opacity .35s; transform: translateX(120%) scale(.9); opacity: 0; }
+/* ---------- nav hover ---------- */
+html[data-animations="on"] .nav__link:hover { transform: translateY(-1px); }
+/* ---------- big numbers pop in ---------- */
+html[data-animations="on"] .big-stat__value { animation: mac-pop .7s var(--bounce) both; }
+
+@keyframes mac-page-in {
+  from { opacity: 0; transform: translateY(14px) scale(.985); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes mac-rise {
+  from { opacity: 0; transform: translateY(18px) scale(.98); filter: blur(4px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes mac-pop {
+  from { opacity: 0; transform: translateY(12px) scale(.9); filter: blur(6px); }
+  to { opacity: 1; transform: none; filter: none; }
+}
+@keyframes mac-fade { from { opacity: 0; } }
+@keyframes mac-toast { from { opacity: 0; transform: translateY(24px) scale(.9); } to { opacity: 1; transform: none; } }
+@keyframes ripple { to { transform: scale(1); opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .glider { transition: none; }
+}

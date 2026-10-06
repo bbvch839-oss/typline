@@ -1,0 +1,100 @@
+/* =========================================================
+   RESPONSIVE
+   Breakpoints: ≤1024 tablet, ≤720 large phone, ≤480 phone
+   ========================================================= */
+
+@media (max-width: 1024px) {
+  .dash-grid--3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .dash-grid--3 > .panel:last-child { grid-column: 1 / -1; }
+  .results__details { grid-template-columns: repeat(2, 1fr); }
+  .results__details .panel:first-child { grid-column: 1 / -1; }
+  .kbd__key { width: 2.1rem; height: 2.1rem; }
+}
+
+@media (max-width: 720px) {
+  :root { --gap: .75rem; }
+  html[data-size="small"]  { --type-size: 1.2rem; }
+  html[data-size="medium"] { --type-size: 1.45rem; }
+  html[data-size="large"]  { --type-size: 1.75rem; }
+
+  .topbar { padding: .9rem 1rem .4rem; gap: .5rem; }
+  .brand { font-size: 1.05rem; gap: .4rem; }
+  .icon-btn.theme-toggle { padding: .45rem; }
+  .brand__mark { width: 1.6rem; height: 1.6rem; }
+  .nav { gap: 0; }
+  .nav__link { padding: .5rem .45rem; }
+  .nav__link span { display: none; }
+  .nav__link svg { width: 1.35rem; height: 1.35rem; }
+  .theme-toggle__label { display: none; }
+
+  .main { padding: .6rem 1rem 1.5rem; }
+  .page--test { min-height: auto; justify-content: flex-start; padding-top: .5rem; }
+
+  .config { width: 100%; }
+  .config__divider { display: none; }
+  .config__group { justify-content: center; }
+
+  .hud { flex-direction: column; align-items: stretch; gap: .5rem; }
+  .hud__main { justify-content: space-between; }
+  .hud__details { justify-content: space-between; gap: .5rem; }
+  .hud__details div { align-items: flex-start; }
+
+  .hints { display: none; }
+
+  .results__top { grid-template-columns: 1fr 1fr; }
+  .results__chart { grid-column: 1 / -1; grid-row: auto; }
+  .big-stat__value { font-size: 2.8rem; }
+  .results__details { grid-template-columns: 1fr; }
+
+  .dash-grid, .dash-grid--3 { grid-template-columns: 1fr; }
+  .dash-grid--3 > .panel:last-child { grid-column: auto; }
+  .page-head { flex-direction: column; align-items: stretch; }
+  .tabs { justify-content: stretch; }
+  .tab { flex: 1; padding: .45rem .4rem; font-size: .85rem; }
+
+  .setting { grid-template-columns: 1fr; }
+  .setting__control { justify-content: flex-start; }
+
+  .form-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  .kbd { display: none !important; }
+  .chart { height: 190px; }
+  .toasts { left: 1rem; align-items: stretch; }
+  .toast { max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .form-grid, .form-grid--2 { grid-template-columns: 1fr; }
+  .streak__value { font-size: 1.7rem; }
+  .stat-row { grid-template-columns: repeat(2, 1fr); }
+  .toolbar { align-items: stretch; }
+  .toolbar .field--inline { flex: 1 1 40%; }
+  .toolbar__spacer { display: none; }
+  .modal__dialog { padding: 1.1rem; }
+  .chip { padding: .35rem .5rem; }
+}
+
+/* Touch devices: larger tap targets */
+@media (hover: none) and (pointer: coarse) {
+  .chip, .option, .tab, .btn { min-height: 40px; }
+  body.is-typing { cursor: auto; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0ms !important; transition-duration: 0ms !important; }
+}
+
+/* ---------- QA fixes: crowded top bar and dashboard tabs on phones ---------- */
+@media (max-width: 760px) {
+  .page-head { flex-direction: column; align-items: stretch; }
+  .tabs { overflow-x: auto; flex-wrap: nowrap; max-width: 100%; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .tabs::-webkit-scrollbar { display: none; }
+  .tab { white-space: nowrap; flex: none; }
+}
+@media (max-width: 520px) {
+  .topbar { gap: .3rem; padding-left: .7rem; padding-right: .7rem; }
+  .brand__name { display: none; }
+  .nav__link { padding: .45rem .38rem; }
+  .icon-btn.theme-toggle { padding: .4rem; }
+  .lang-toggle .theme-toggle__label { font-size: .7rem; }
+}

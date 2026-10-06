@@ -1,0 +1,181 @@
+/* =========================================================
+   THEMES
+   Every theme only redefines the same set of tokens.
+   To add a theme: copy one block, change the selector name
+   and the values, then register it in js/settings.js (THEMES).
+   ========================================================= */
+
+:root,
+[data-theme="dark"] {
+  --bg: #16181d;
+  --surface: #1e2128;
+  --surface-2: #262a33;
+  --border: #2f3440;
+  --text: #e6e8ee;
+  --muted: #7d8494;
+  --subtle: #4d5361;       /* untyped letters */
+  --accent: #4fd1b5;
+  --accent-contrast: #0c1512;
+  --accent-soft: rgba(79, 209, 181, 0.14);
+  --error: #ff6b7d;
+  --error-soft: rgba(255, 107, 125, 0.16);
+  --error-extra: #b44657;
+  --success: #7ee08a;
+  --warning: #f2c46b;
+  --caret: var(--accent);
+  --chart-1: #4fd1b5;
+  --chart-2: #8b93a6;
+  --chart-3: #ff6b7d;
+  --heat-0: #232730;
+  --heat-1: #1f4a42;
+  --heat-2: #2a7163;
+  --heat-3: #3aa28b;
+  --heat-4: #4fd1b5;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+[data-theme="light"] {
+  --bg: #f4f2ee;
+  --surface: #ffffff;
+  --surface-2: #ebe8e1;
+  --border: #dcd7cc;
+  --text: #25262b;
+  --muted: #6c6a66;
+  --subtle: #aaa59b;
+  --accent: #3b5bdb;
+  --accent-contrast: #ffffff;
+  --accent-soft: rgba(59, 91, 219, 0.12);
+  --error: #d6334a;
+  --error-soft: rgba(214, 51, 74, 0.12);
+  --error-extra: #9c2536;
+  --success: #2f9e44;
+  --warning: #c77c02;
+  --caret: var(--accent);
+  --chart-1: #3b5bdb;
+  --chart-2: #9a958b;
+  --chart-3: #d6334a;
+  --heat-0: #e7e3da;
+  --heat-1: #c5cff5;
+  --heat-2: #8fa3ec;
+  --heat-3: #5b78e2;
+  --heat-4: #3b5bdb;
+  --shadow: 0 10px 30px rgba(40, 36, 28, 0.12);
+  color-scheme: light;
+}
+
+[data-theme="midnight"] {
+  --bg: #0f1226;
+  --surface: #161a33;
+  --surface-2: #1e2342;
+  --border: #292f55;
+  --text: #dfe2f7;
+  --muted: #7b80a8;
+  --subtle: #474d78;
+  --accent: #a78bfa;
+  --accent-contrast: #140f26;
+  --accent-soft: rgba(167, 139, 250, 0.15);
+  --error: #ff7aa2;
+  --error-soft: rgba(255, 122, 162, 0.16);
+  --error-extra: #b3517a;
+  --success: #74e0b5;
+  --warning: #f5c56b;
+  --caret: #c4b5fd;
+  --chart-1: #a78bfa;
+  --chart-2: #7b80a8;
+  --chart-3: #ff7aa2;
+  --heat-0: #1b1f3c;
+  --heat-1: #342d6b;
+  --heat-2: #54449d;
+  --heat-3: #7d65d0;
+  --heat-4: #a78bfa;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  color-scheme: dark;
+}
+
+[data-theme="amoled"] {
+  --bg: #000000;
+  --surface: #0b0b0b;
+  --surface-2: #151515;
+  --border: #222222;
+  --text: #f2f2f2;
+  --muted: #7a7a7a;
+  --subtle: #3d3d3d;
+  --accent: #ff9f43;
+  --accent-contrast: #140a00;
+  --accent-soft: rgba(255, 159, 67, 0.13);
+  --error: #ff4d5e;
+  --error-soft: rgba(255, 77, 94, 0.15);
+  --error-extra: #a8313d;
+  --success: #5fe07a;
+  --warning: #ffd166;
+  --caret: var(--accent);
+  --chart-1: #ff9f43;
+  --chart-2: #8a8a8a;
+  --chart-3: #ff4d5e;
+  --heat-0: #141414;
+  --heat-1: #4a2e12;
+  --heat-2: #7e4b19;
+  --heat-3: #bf7128;
+  --heat-4: #ff9f43;
+  --shadow: none;
+  color-scheme: dark;
+}
+
+[data-theme="forest"] {
+  --bg: #1a211d;
+  --surface: #212a25;
+  --surface-2: #29342e;
+  --border: #34423a;
+  --text: #e3eadf;
+  --muted: #86968a;
+  --subtle: #4f5e54;
+  --accent: #c7d36f;
+  --accent-contrast: #1a1f0a;
+  --accent-soft: rgba(199, 211, 111, 0.14);
+  --error: #f08a6c;
+  --error-soft: rgba(240, 138, 108, 0.16);
+  --error-extra: #a95a44;
+  --success: #8fd694;
+  --warning: #e8b86a;
+  --caret: var(--accent);
+  --chart-1: #c7d36f;
+  --chart-2: #86968a;
+  --chart-3: #f08a6c;
+  --heat-0: #242e28;
+  --heat-1: #3e4a2c;
+  --heat-2: #667537;
+  --heat-3: #96a553;
+  --heat-4: #c7d36f;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+[data-theme="sand"] {
+  --bg: #efe6d8;
+  --surface: #f8f2e8;
+  --surface-2: #e4d9c6;
+  --border: #d3c5ae;
+  --text: #3a3128;
+  --muted: #7d6f5f;
+  --subtle: #b3a58f;
+  --accent: #b5552d;
+  --accent-contrast: #fff8f0;
+  --accent-soft: rgba(181, 85, 45, 0.12);
+  --error: #c0263e;
+  --error-soft: rgba(192, 38, 62, 0.12);
+  --error-extra: #8a1c2d;
+  --success: #4c8a3a;
+  --warning: #b27a0f;
+  --caret: var(--accent);
+  --chart-1: #b5552d;
+  --chart-2: #9c8d78;
+  --chart-3: #c0263e;
+  --heat-0: #e2d6c2;
+  --heat-1: #e3b99c;
+  --heat-2: #d48f66;
+  --heat-3: #c26f43;
+  --heat-4: #b5552d;
+  --shadow: 0 10px 30px rgba(70, 50, 20, 0.12);
+  color-scheme: light;
+}
